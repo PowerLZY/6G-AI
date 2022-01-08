@@ -17,16 +17,19 @@ def norm_data(x, num_sample, num_rx, num_tx, num_delay):
 NUM_RX = 4
 NUM_TX = 32
 NUM_DELAY = 32
-NUM_SAMPLE_TRAIN = 500
+NUM_SAMPLE_TRAIN = 4000
 LATENT_DIM = 128
 BATCH_SIZE = 256
-EPOCH = 100
+EPOCH = 10
 
 inter_path = "./data/train/"
 submit_path = "./data/output/"
 
-data_train = h5py.File(inter_path+'H1_32T4R.mat', 'r')
-data_train = np.transpose(data_train['H1_32T4R'][:])
+# data_train = h5py.File(inter_path+'H1_32T4R.mat', 'r')
+# data_train = np.transpose(data_train['H1_32T4R'][:])
+
+data_train = h5py.File(inter_path+'H2_32T4R.mat', 'r')
+data_train = np.transpose(data_train['H2_32T4R'][:])
 data_train = data_train[:, :, :, :, np.newaxis]
 data_train = np.concatenate([data_train['real'], data_train['imag']], 4)
 data_train = np.reshape(data_train, [NUM_SAMPLE_TRAIN, NUM_RX* NUM_TX, NUM_DELAY* 2, 1])
@@ -175,6 +178,6 @@ for iteration in range(int(EPOCH*(NUM_SAMPLE_TRAIN/BATCH_SIZE))):
 
     if iteration % (int(NUM_SAMPLE_TRAIN/BATCH_SIZE)) == 0:
         print('Epoch = ' + str(int(iteration / int(NUM_SAMPLE_TRAIN/BATCH_SIZE))) + ', d_loss = ' + str(d_loss.cpu().data.numpy()) + ', g_loss = ' + str(g_loss.cpu().data.numpy()))
-        torch.save(g_model, submit_path+'generator.pth.tar')
+        torch.save(g_model, submit_path+'generator_2.pth.tar')
 
 
